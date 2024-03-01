@@ -24,11 +24,9 @@ public class UpdatesListenerImpl implements UpdatesListener {
 
     private void processCommand(Update update) {
         Message message = update.message();
-        if (message == null) {
-            return;
-        }
+        String messageText = handleMessageText(message);
         Long chatId = message.chat().id();
-        CommandArguments commandArguments = CommandArguments.fromString(message.text());
+        CommandArguments commandArguments = CommandArguments.fromString(messageText);
         commands.stream()
             .filter(command -> command.isCommand(commandArguments.commandName))
             .findFirst()
@@ -40,6 +38,14 @@ public class UpdatesListenerImpl implements UpdatesListener {
                     )),
                 () -> bot.execute(new SendMessage(chatId, "unknown command"))
             );
+    }
+
+    private String handleMessageText(Message message) {
+        if (message == null || message.text() == null) {
+            return "";
+        } else {
+            return message.text();
+        }
     }
 
     private record CommandArguments(String commandName, List<String> arguments) {
