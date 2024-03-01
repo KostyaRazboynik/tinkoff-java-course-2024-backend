@@ -9,14 +9,14 @@ public class ClientConfiguration {
     @Bean
     public WebClient githubWebClient(ApplicationConfig applicationConfig) {
         return WebClient.builder()
-            .baseUrl(applicationConfig.baseGithubUrl())
+            .baseUrl(applicationConfig.baseUrls().baseGithubUrl())
             .build();
     }
 
     @Bean
     public WebClient stackOverflowWebClient(ApplicationConfig applicationConfig) {
         return WebClient.builder()
-            .baseUrl(applicationConfig.baseStackOverflowUrl())
+            .baseUrl(applicationConfig.baseUrls().baseStackOverflowUrl())
             .build();
     }
 }
