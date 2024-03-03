@@ -19,7 +19,6 @@ public class GitHubClientTest {
     private final GitHubClient githubClient = new GitHubClient(WebClient.create("http://localhost:8029"));
 
     @Test
-    @DisplayName("Should return repository info when API call is successful")
     void successfulApiResponseTest() {
         stubFor(get(urlEqualTo("/repos/test/test"))
             .willReturn(aResponse()
