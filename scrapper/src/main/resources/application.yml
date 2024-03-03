@@ -2,6 +2,7 @@ app:
   baseUrls:
     baseGitHubUrl: https://api.github.com
     baseStackOverflowUrl: https://api.stackexchange.com/2.3
+    botBaseUrl: http://localhost:8090
   scheduler:
     enable: true
     interval: 10s

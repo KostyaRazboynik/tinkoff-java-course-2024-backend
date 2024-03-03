@@ -24,7 +24,7 @@ public class UpdatesListenerImpl implements UpdatesListener {
 
     private void processCommand(Update update) {
         Message message = update.message();
-        String messageText = handleMessageText(message);
+        String messageText = getTextFromMessage(message);
         Long chatId = message.chat().id();
         CommandArguments commandArguments = CommandArguments.fromString(messageText);
         commands.stream()
@@ -40,7 +40,7 @@ public class UpdatesListenerImpl implements UpdatesListener {
             );
     }
 
-    private String handleMessageText(Message message) {
+    private String getTextFromMessage(Message message) {
         if (message == null || message.text() == null) {
             return "";
         } else {

@@ -1,5 +1,6 @@
 package edu.java.data.client.github;
 
+import edu.java.data.client.BaseClient;
 import edu.java.data.client.github.dto.GithubRepositoryDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -9,8 +10,13 @@ import reactor.core.publisher.Mono;
 
 @Component
 @RequiredArgsConstructor
-public class GitHubClient /*implements BaseClient*/ {
+public class GitHubClient implements BaseClient {
     private final WebClient githubWebClient;
+
+    @Override
+    public WebClient getWebClient() {
+        return githubWebClient;
+    }
 
     public Mono<GithubRepositoryDTO> getRepositoryInfo(String owner, String repositoryName) {
         return githubWebClient.get()
@@ -28,9 +34,4 @@ public class GitHubClient /*implements BaseClient*/ {
             )
             .bodyToMono(GithubRepositoryDTO.class);
     }
-
-//    @Override
-//    public WebClient getWebClient() {
-//        return githubWebClient;
-//    }
 }

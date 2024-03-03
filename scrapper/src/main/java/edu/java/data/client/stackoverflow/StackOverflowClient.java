@@ -13,6 +13,11 @@ import reactor.core.publisher.Mono;
 public class StackOverflowClient implements BaseClient {
     private final WebClient stackOverflowWebClient;
 
+    @Override
+    public WebClient getWebClient() {
+        return stackOverflowWebClient;
+    }
+
     public Mono<StackOverflowQuestionDTO> getQuestionInfo(long id) {
         return stackOverflowWebClient.get()
             .uri("/questions/{id}?site=stackoverflow", id)
@@ -28,10 +33,5 @@ public class StackOverflowClient implements BaseClient {
                 ))
             )
             .bodyToMono(StackOverflowQuestionDTO.class);
-    }
-
-    @Override
-    public WebClient getWebClient() {
-        return stackOverflowWebClient;
     }
 }
