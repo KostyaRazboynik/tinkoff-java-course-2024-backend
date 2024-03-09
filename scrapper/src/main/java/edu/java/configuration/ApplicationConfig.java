@@ -23,7 +23,10 @@ public record ApplicationConfig(
         String baseGithubUrl,
         @NotEmpty
         @DefaultValue("https://api.stackexchange.com/2.3")
-        String baseStackOverflowUrl
+        String baseStackOverflowUrl,
+        @NotEmpty
+        @DefaultValue("http//localhost:8090")
+        String botBaseUrl
     ) {
     }
 }
