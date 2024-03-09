@@ -11,7 +11,7 @@ import edu.java.bot.command.ListCommand;
 import edu.java.bot.command.StartCommand;
 import edu.java.bot.command.TrackCommand;
 import edu.java.bot.command.UntrackCommand;
-import edu.java.bot.components.UpdatesListenerImpl;
+import edu.java.bot.service.UpdatesListenerImpl;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
