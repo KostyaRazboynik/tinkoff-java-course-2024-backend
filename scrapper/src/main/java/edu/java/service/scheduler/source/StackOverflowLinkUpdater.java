@@ -29,7 +29,6 @@ public class StackOverflowLinkUpdater implements SourceLinkUpdaterService {
         String url = link.link;
         if (LinkValidator.isStackOverflowLink(url)) {
             String[] parts = url.split("/");
-
             stackOverflowClient.getQuestionInfo(Long.parseLong(parts[4])).subscribe(
                 stackOverflowQuestionDTOConsumer(link.link)
             );
@@ -45,7 +44,7 @@ public class StackOverflowLinkUpdater implements SourceLinkUpdaterService {
                     var request = new LinkUpdateRequest(
                         0L,
                         new URI(link),
-                        "updated github link",
+                        "stackOverflow link updating",
                         chatService.findChatsByLink(link).stream().map(Chat::getChatId).collect(Collectors.toList())
                     );
                     botClient.update(request).subscribe();

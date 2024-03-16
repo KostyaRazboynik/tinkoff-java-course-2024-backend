@@ -17,33 +17,33 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Override
     public List<Link> findAll() {
-        String request = "select * from link";
+        String request = "SELECT * FROM link";
         return jdbcTemplate.query(request, linkRowMapper);
     }
 
     @Override
     public boolean add(String link, int typeId) {
         String request =
-            "insert into link (link, type_id, checked_date) "
-                + "values (?, ?, timezone('utc', now())) on conflict replace";
+            "INSERT INTO link (link, type_id, checked_date) "
+                + "values (?, ?, timezone('utc', now())) ON CONFLICT DO NOTHING";
         return jdbcTemplate.update(request, link, typeId) != 0;
     }
 
     @Override
     public boolean delete(String link) {
-        String request = "delete from link where link = ?";
+        String request = "DELETE FROM link WHERE link = ?";
         return jdbcTemplate.update(request, link) != 0;
     }
 
     @Override
     public List<Link> getLinksToUpdate() {
-        String request = "select * from link where checked_date < timezone('utc', now()) - interval '1 minute'";
+        String request = "SELECT * FROM link WHERE checked_date < timezone('utc', now()) - interval '1 minute'";
         return jdbcTemplate.query(request, linkRowMapper);
     }
 
     @Override
     public boolean updateCheckDate(String link) {
-        String request = "update link set checked_date = timezone('utc', now()) where link = ?";
+        String request = "UPDATE link SET checked_date = timezone('utc', now()) WHERE link = ?";
         return jdbcTemplate.update(request, link) != 0;
     }
 }

@@ -6,11 +6,11 @@ databaseChangeLog:
         - tagDatabase:
             tag: 1
   - include:
-      file: chat_table.sql
+      file: chat.sql
       relativeToChangelogFile: true
   - include:
-      file: link_table.sql
+      file: link.sql
       relativeToChangelogFile: true
   - include:
-      file: link_chat_table.sql
+      file: link_chat.sql
       relativeToChangelogFile: true

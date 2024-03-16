@@ -21,31 +21,31 @@ public class JdbcLinkToChatRepository implements LinkToChatRepository {
 
     @Override
     public boolean add(String link, Long chatId) {
-        String request = "insert into link_chat (chat_id, link) values (?, ?) on conflict replace";
+        String request = "INSERT INTO link_chat (chat_id, link) values (?, ?) ON CONFLICT DO NOTHING";
         return jdbcTemplate.update(request, chatId, link) != 0;
     }
 
     @Override
     public boolean delete(String link, Long chatId) {
-        String request = "delete from link_chat where chat_id = ? and link = ?";
+        String request = "DELETE FROM link_chat WHERE chat_id = ? AND link = ?";
         return jdbcTemplate.update(request, chatId, link) != 0;
     }
 
     @Override
     public List<LinkToChat> findAll() {
-        String request = "select * from link_chat join link using (link)";
+        String request = "SELECT * FROM link_chat JOIN link USING (link)";
         return jdbcTemplate.query(request, linkChatRowMapper);
     }
 
     @Override
     public List<Chat> findChatsByLink(String link) {
-        String request = "select * from link_chat join link using (link) where link = ?";
+        String request = "SELECT * FROM link_chat JOIN link USING (link) WHERE link = ?";
         return jdbcTemplate.query(request, chatRowMapper, link);
     }
 
     @Override
     public List<Link> findLinksByChat(Long chatId) {
-        String request = "select * from link_chat join link using (link) where chat_id = ?";
+        String request = "SELECT * FROM link_chat JOIN link USING (link) where chat_id = ?";
         return jdbcTemplate.query(request, linkRowMapper, chatId);
     }
 }

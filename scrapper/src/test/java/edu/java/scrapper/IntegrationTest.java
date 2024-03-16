@@ -9,11 +9,18 @@ import liquibase.database.core.PostgresDatabase;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.DirectoryResourceAccessor;
 import liquibase.resource.ResourceAccessor;
+import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.support.JdbcTransactionManager;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import javax.sql.DataSource;
 
 @Testcontainers
 @SuppressWarnings("resource")
@@ -59,5 +66,25 @@ public abstract class IntegrationTest {
         registry.add("spring.datasource.url", POSTGRES::getJdbcUrl);
         registry.add("spring.datasource.username", POSTGRES::getUsername);
         registry.add("spring.datasource.password", POSTGRES::getPassword);
+    }
+
+    @TestConfiguration
+    public static class ManagerConfig {
+
+        @Primary
+        @Bean
+        public DataSource testDataSource() {
+            return DataSourceBuilder.create()
+                .driverClassName(POSTGRES.getDriverClassName())
+                .url(POSTGRES.getJdbcUrl())
+                .password(POSTGRES.getPassword())
+                .username(POSTGRES.getUsername())
+                .build();
+        }
+
+        @Bean
+        public PlatformTransactionManager manager(DataSource source) {
+            return new JdbcTransactionManager(source);
+        }
     }
 }

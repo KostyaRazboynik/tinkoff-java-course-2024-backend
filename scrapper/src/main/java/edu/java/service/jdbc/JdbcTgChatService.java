@@ -1,8 +1,8 @@
 package edu.java.service.jdbc;
 
 import edu.java.domain.dto.Chat;
-import edu.java.domain.repository.ChatRepository;
 import edu.java.domain.repository.LinkToChatRepository;
+import edu.java.domain.repository.TgChatRepository;
 import edu.java.service.TgChatService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class JdbcTgChatService implements TgChatService {
 
-    private final ChatRepository repository;
+    private final TgChatRepository repository;
     private final LinkToChatRepository mapperRepository;
 
     @Override

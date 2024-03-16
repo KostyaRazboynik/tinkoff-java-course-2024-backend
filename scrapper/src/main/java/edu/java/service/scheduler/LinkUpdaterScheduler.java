@@ -18,7 +18,6 @@ public class LinkUpdaterScheduler {
 
     @Scheduled(fixedDelayString = "#{@'app-edu.java.configuration.ApplicationConfig'.scheduler.interval}")
     public int update() {
-        log.debug("updating links...");
         return linkUpdater.update();
     }
 }

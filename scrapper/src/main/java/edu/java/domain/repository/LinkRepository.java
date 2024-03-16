@@ -14,5 +14,4 @@ public interface LinkRepository {
     List<Link> getLinksToUpdate();
 
     boolean updateCheckDate(String link);
-
 }

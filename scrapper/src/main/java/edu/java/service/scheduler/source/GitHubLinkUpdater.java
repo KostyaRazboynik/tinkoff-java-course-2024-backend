@@ -27,7 +27,6 @@ public class GitHubLinkUpdater implements SourceLinkUpdaterService {
     @Override
     public int update(Link link) {
         String url = link.link;
-
        if (LinkValidator.isGitHubLink(url)) {
            String[] parts = url.split("/");
            String owner = parts[parts.length - 2];
@@ -48,7 +47,7 @@ public class GitHubLinkUpdater implements SourceLinkUpdaterService {
                     var request = new LinkUpdateRequest(
                         0L,
                         new URI(link),
-                        "updated github link",
+                        "github link updating",
                         chatService.findChatsByLink(link).stream().map(Chat::getChatId).collect(Collectors.toList())
                     );
                     botClient.update(request).subscribe();

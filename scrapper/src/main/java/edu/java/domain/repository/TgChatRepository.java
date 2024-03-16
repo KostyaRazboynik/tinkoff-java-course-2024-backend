@@ -3,7 +3,7 @@ package edu.java.domain.repository;
 import edu.java.domain.dto.Chat;
 import java.util.List;
 
-public interface ChatRepository {
+public interface TgChatRepository {
 
     boolean add(Long chatId);
 

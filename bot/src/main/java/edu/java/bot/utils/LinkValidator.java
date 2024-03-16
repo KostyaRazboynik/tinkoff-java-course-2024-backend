@@ -1,26 +1,16 @@
-package edu.java.utils;
+package edu.java.bot.utils;
 
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class LinkValidator {
 
-    public static LinkType getLinkType(String link) {
-        if (isStackOverflowLink(link)) {
-            return LinkType.STACKOVERFLOW_LINK;
-        } else if (isGitHubLink(link)) {
-            return LinkType.GITHUB_LINK;
-        } else {
-            return LinkType.UNKNOWN_LINK;
-        }
-    }
-
     public static boolean isValidLink(String link) {
         return isGitHubLink(link) || isStackOverflowLink(link);
     }
 
     @SuppressWarnings("MagicNumber")
-    public static boolean isGitHubLink(String link) {
+    private static boolean isGitHubLink(String link) {
         String[] parts = link.split("/");
         if (parts.length != 5) {
             return false;
@@ -31,7 +21,7 @@ public class LinkValidator {
     }
 
     @SuppressWarnings("MagicNumber")
-    public static boolean isStackOverflowLink(String link) {
+    private static boolean isStackOverflowLink(String link) {
         String[] parts = link.split("/");
         if (parts.length != 6) {
             return false;

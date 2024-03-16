@@ -1,8 +1,8 @@
-package edu.java.scrapper;
+package edu.java.scrapper.client;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
-import edu.java.data.client.stackoverflow.StackOverflowClient;
-import edu.java.data.client.stackoverflow.dto.StackOverflowQuestionDTO.QuestionResponse;
+import edu.java.data.client.github.GitHubClient;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -14,39 +14,36 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @WireMockTest(httpPort = 8029)
-class StackOverflowClientTest {
-    private final StackOverflowClient client =
-        new StackOverflowClient(WebClient.create("http://localhost:8029"));
+public class GitHubClientTest {
+
+    private final GitHubClient githubClient = new GitHubClient(WebClient.create("http://localhost:8029"));
 
     @Test
     void successfulApiResponseTest() {
-        stubFor(get(urlEqualTo("/questions/1?site=stackoverflow"))
+        stubFor(get(urlEqualTo("/repos/test/test"))
             .willReturn(aResponse()
                 .withHeader("Content-Type", "application/json")
-                .withBodyFile("stackOverflowSuccessfulResponse.json")
+                .withBodyFile("gitHubSuccessfulResponse.json")
                 .withStatus(200)));
 
-        StepVerifier.create(client.getQuestionInfo(1L))
+        StepVerifier.create(githubClient.getRepositoryInfo("test", "test"))
             .assertNext(response -> {
-                assertThat(response.getQuestions()).hasSize(1);
-                QuestionResponse question = response.questions.getFirst();
-                assertThat(question.getOwner()).isEqualTo("test");
-                assertThat(question.getTitle()).isEqualTo("Binary Data in MySQL");
-                assertThat(question.getUpdatedAt()).isEqualTo("2020-12-03T03:37:51Z");
+                assertThat(response.getOwner()).isEqualTo("test");
+                assertThat(response.getName()).isEqualTo("test");
+                assertThat(response.getUpdatedAt()).isEqualTo("2024-02-19T10:45:34Z");
             })
             .verifyComplete();
     }
 
     @Test
     void webClientResponseExceptionTest() {
-        stubFor(get(urlEqualTo("/questions/1?site=stackoverflow"))
+        stubFor(get(urlEqualTo("/repos/owner/repo"))
             .willReturn(aResponse()
                 .withStatus(500)));
-
-        StepVerifier.create(client.getQuestionInfo(1L))
+        StepVerifier.create(githubClient.getRepositoryInfo("owner", "repo"))
             .expectErrorSatisfies(throwable -> assertThat(throwable)
                 .isInstanceOf(WebClientResponseException.class)
-                .hasMessageEndingWith("500 StackOverflow API error"))
+                .hasMessageEndingWith("500 Github API error"))
             .verify();
     }
 }
