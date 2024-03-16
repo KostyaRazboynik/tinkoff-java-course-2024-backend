@@ -61,7 +61,7 @@ class ScrapperClientBaseTest {
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .withBody("{\"url\":\"test\",\"id\":1}")));
 
-        StepVerifier.create(scrapperClient.addLink(1L, "test"))
+        StepVerifier.create(scrapperClient.trackLink(1L, "test"))
             .assertNext(response -> {
                     assertThat(response.url.toString()).isEqualTo("test");
                     assertThat(response.id).isEqualTo(1L);
@@ -77,7 +77,7 @@ class ScrapperClientBaseTest {
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .withBody("{\"url\":\"test\"}")));
 
-        StepVerifier.create(scrapperClient.removeLink(1L, "test"))
+        StepVerifier.create(scrapperClient.untrackLink(1L, "test"))
             .assertNext(response -> assertThat(response.url.toString()).isEqualTo("test"))
             .verifyComplete();
     }

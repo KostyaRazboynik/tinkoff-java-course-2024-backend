@@ -1,5 +1,6 @@
 package edu.java.bot.command;
 
+import com.pengrad.telegrambot.request.SendMessage;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,7 @@ public class HelpCommand implements Command {
     }
 
     @Override
-    public String execute(List<String> arguments) {
+    public SendMessage execute(Long chatId, String text) {
         StringBuilder helpMessage = new StringBuilder();
         commands.forEach(command ->
             helpMessage.append(command.command())
@@ -29,8 +30,8 @@ public class HelpCommand implements Command {
                 .append(System.lineSeparator())
         );
         if (helpMessage.isEmpty()) {
-            return "no commands available";
+            return new SendMessage(chatId, "no commands available");
         }
-        return helpMessage.toString();
+        return new SendMessage(chatId, helpMessage.toString());
     }
 }

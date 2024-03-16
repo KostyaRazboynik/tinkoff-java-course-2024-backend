@@ -5,6 +5,7 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.client.ScrapperClient;
 import edu.java.bot.command.Command;
 import edu.java.bot.command.HelpCommand;
 import edu.java.bot.command.ListCommand;
@@ -35,14 +36,16 @@ public class BaseTest {
     @Mock
     private Chat chat;
     @Mock
+    private ScrapperClient scrapperClient;
+    @Mock
     private List<Command> commands;
 
     private UpdatesListenerImpl updateListener;
     private final List<Command> supportedCommands = List.of(
-        new StartCommand(),
-        new ListCommand(),
-        new TrackCommand(),
-        new UntrackCommand()
+        new StartCommand(scrapperClient),
+        new ListCommand(scrapperClient),
+        new TrackCommand(scrapperClient),
+        new UntrackCommand(scrapperClient)
     );
 
     @BeforeEach
@@ -55,7 +58,7 @@ public class BaseTest {
     @Test
     public void testStart() {
         successfulCommandTest(
-            Stream.of(new StartCommand()),
+            Stream.of(new StartCommand(scrapperClient)),
             "/start",
             """
                 hello! I'll help you to track changes to websites and notify you
@@ -81,7 +84,7 @@ public class BaseTest {
     @Test
     public void testTrack() {
         successfulCommandTest(
-            Stream.of(new TrackCommand()),
+            Stream.of(new TrackCommand(scrapperClient)),
             "/track link",
             "not implemented yet"
         );
@@ -90,7 +93,7 @@ public class BaseTest {
     @Test
     public void testUntrack() {
         successfulCommandTest(
-            Stream.of(new UntrackCommand()),
+            Stream.of(new UntrackCommand(scrapperClient)),
             "/untrack link",
             "not implemented yet"
         );
@@ -99,7 +102,7 @@ public class BaseTest {
     @Test
     public void testList() {
         successfulCommandTest(
-            Stream.of(new ListCommand()),
+            Stream.of(new ListCommand(scrapperClient)),
             "/list",
             "not implemented yet"
         );
@@ -108,12 +111,12 @@ public class BaseTest {
     @Test
     public void testInvalidNumberOfArguments() {
         successfulCommandTest(
-            Stream.of(new UntrackCommand()),
+            Stream.of(new UntrackCommand(scrapperClient)),
             "/untrack",
             "use the command followed by the link"
         );
         successfulCommandTest(
-            Stream.of(new TrackCommand()),
+            Stream.of(new TrackCommand(scrapperClient)),
             "/track",
             "use the command followed by the link"
         );

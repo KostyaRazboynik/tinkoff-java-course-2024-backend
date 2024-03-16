@@ -26,16 +26,11 @@ public class UpdatesListenerImpl implements UpdatesListener {
         Message message = update.message();
         String messageText = getTextFromMessage(message);
         Long chatId = message.chat().id();
-        CommandArguments commandArguments = CommandArguments.fromString(messageText);
         commands.stream()
-            .filter(command -> command.isCommand(commandArguments.commandName))
+            .filter(command -> command.isCommand(getCommandFromText(messageText)))
             .findFirst()
             .ifPresentOrElse(
-                command ->
-                    bot.execute(new SendMessage(
-                        chatId,
-                        command.execute(commandArguments.arguments)
-                    )),
+                command -> bot.execute(command.execute(chatId, messageText)),
                 () -> bot.execute(new SendMessage(chatId, "unknown command"))
             );
     }
@@ -48,10 +43,7 @@ public class UpdatesListenerImpl implements UpdatesListener {
         }
     }
 
-    private record CommandArguments(String commandName, List<String> arguments) {
-        public static CommandArguments fromString(String text) {
-            List<String> words = List.of(text.split("\\s+"));
-            return new CommandArguments(words.getFirst(), words.subList(1, words.size()));
-        }
+    private String getCommandFromText(String text) {
+        return List.of(text.split("\\s+")).getFirst();
     }
 }
