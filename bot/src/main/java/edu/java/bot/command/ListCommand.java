@@ -29,7 +29,7 @@ public class ListCommand implements Command {
             response -> new SendMessage(
                 chatId,
                 response.links.stream().map(link -> link.url.toString()).reduce((a, b) -> a + lineSeparator() + b)
-                    .orElse("No links are being tracked")
+                    .orElse("no tracking links")
             )
         ).onErrorResume(error -> Mono.just(new SendMessage(chatId, error.getMessage()))).block();
     }

@@ -29,7 +29,7 @@ public class UntrackCommand implements Command {
             return new SendMessage(chatId, "use the command followed by the link");
         }
         return scrapperClient.untrackLink(chatId, splitText[1])
-            .map(response -> new SendMessage(chatId, "Link " + response.url + " removed"))
+            .map(response -> new SendMessage(chatId, "link " + response.url + " removed"))
             .onErrorResume(error -> Mono.just(new SendMessage(chatId, error.getMessage())))
             .block();
     }

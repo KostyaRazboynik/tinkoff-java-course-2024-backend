@@ -6,6 +6,8 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.client.ScrapperClient;
+import edu.java.bot.client.dto.response.LinkResponse;
+import edu.java.bot.client.dto.response.ListLinksResponse;
 import edu.java.bot.command.Command;
 import edu.java.bot.command.HelpCommand;
 import edu.java.bot.command.ListCommand;
@@ -13,6 +15,8 @@ import edu.java.bot.command.StartCommand;
 import edu.java.bot.command.TrackCommand;
 import edu.java.bot.command.UntrackCommand;
 import edu.java.bot.service.UpdatesListenerImpl;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +24,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import reactor.core.publisher.Mono;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -48,9 +55,19 @@ public class BaseTest {
         new UntrackCommand(scrapperClient)
     );
 
+    public void setUpScrapperClient() throws URISyntaxException {
+        when(scrapperClient.register(anyLong())).thenReturn(Mono.empty());
+        when(scrapperClient.trackLink(anyLong(), eq("https://github.com/owner/repo")))
+            .thenReturn(Mono.just(new LinkResponse(0L, new URI("https://github.com/owner/repo"))));
+        when(scrapperClient.untrackLink(anyLong(), eq("https://github.com/owner/repo")))
+            .thenReturn(Mono.just(new LinkResponse(0L, new URI("https://github.com/owner/repo"))));
+        when(scrapperClient.getLinks(anyLong())).thenReturn(Mono.just(new ListLinksResponse(0, List.of())));
+    }
+
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws URISyntaxException {
         MockitoAnnotations.openMocks(this);
+        setUpScrapperClient();
         updateListener = new UpdatesListenerImpl(bot, commands);
         bot.setUpdatesListener(updateListener);
     }
@@ -85,8 +102,8 @@ public class BaseTest {
     public void testTrack() {
         successfulCommandTest(
             Stream.of(new TrackCommand(scrapperClient)),
-            "/track link",
-            "not implemented yet"
+            "/track https://github.com/owner/repo",
+            "started tracking https://github.com/owner/repo"
         );
     }
 
@@ -94,8 +111,8 @@ public class BaseTest {
     public void testUntrack() {
         successfulCommandTest(
             Stream.of(new UntrackCommand(scrapperClient)),
-            "/untrack link",
-            "not implemented yet"
+            "/untrack https://github.com/owner/repo",
+            "link https://github.com/owner/repo removed"
         );
     }
 
@@ -104,7 +121,7 @@ public class BaseTest {
         successfulCommandTest(
             Stream.of(new ListCommand(scrapperClient)),
             "/list",
-            "not implemented yet"
+            "no tracking links"
         );
     }
 

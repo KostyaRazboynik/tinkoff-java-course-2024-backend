@@ -30,7 +30,7 @@ public class StartCommand implements Command {
             """;
         return scrapperClient.register(chatId)
             .then(Mono.fromCallable(() -> new SendMessage(chatId, firstMessage)))
-            //.onErrorResume(error -> Mono.just(new SendMessage(chatId, "failed to register, try again later")))
+            .onErrorResume(error -> Mono.just(new SendMessage(chatId, "failed to register, try again later")))
             .block();
     }
 }
