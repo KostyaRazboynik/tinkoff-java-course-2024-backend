@@ -13,10 +13,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class MigrationTest extends IntegrationTest {
     private static Statement statement;
     private final String SQL_INSERT_GOOGLE =
-        "INSERT INTO link (link,type_id,checked_date) VALUES ('http://google.com', 1, now())";
+        "INSERT INTO link (link,type_id,update_date) VALUES ('http://google.com', 1, now())";
 
     private final String SQL_INSERT_YANDEX =
-        "INSERT INTO link (link,type_id,checked_date) VALUES ('https://ya.ru/', 1, now())";
+        "INSERT INTO link (link,type_id,update_date) VALUES ('https://ya.ru/', 1, now())";
 
 
     @BeforeAll

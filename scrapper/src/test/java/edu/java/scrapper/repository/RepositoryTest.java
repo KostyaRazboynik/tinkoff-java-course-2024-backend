@@ -1,6 +1,6 @@
 package edu.java.scrapper.repository;
 
-import edu.java.configuration.DataBaseConfiguration;
+import edu.java.di.DataBaseProvider;
 import edu.java.domain.dto.Chat;
 import edu.java.domain.dto.LinkToChat;
 import edu.java.domain.repository.jdbc.JdbcTgChatRepository;
@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = {
     IntegrationTest.ManagerConfig.class,
-    DataBaseConfiguration.class,
+    DataBaseProvider.class,
     JdbcTgChatRepository.class,
     JdbcLinkRepository.class,
     JdbcLinkToChatRepository.class,

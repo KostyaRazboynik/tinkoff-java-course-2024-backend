@@ -5,9 +5,7 @@ import edu.java.domain.repository.LinkRepository;
 import edu.java.service.LinkUpdaterService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
 public class JdbcLinkUpdaterService implements LinkUpdaterService {
 

@@ -1,4 +1,4 @@
-package edu.java.configuration;
+package edu.java.di;
 
 import edu.java.domain.dto.Chat;
 import edu.java.domain.dto.Link;
@@ -14,7 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 @Configuration
-public class DataBaseConfiguration {
+public class DataBaseProvider {
 
     private static final String URL = "jdbc:postgresql://localhost:5432/scrapper";
     private static final String POSTGRES = "postgres";

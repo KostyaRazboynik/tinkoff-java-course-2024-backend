@@ -7,10 +7,15 @@ app:
     enable: true
     interval: 10s
     force-check-delay: 10s
+  databaseAccessType: jdbc
 
 spring:
   application:
     name: scrapper
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
 
 server:
   port: 8080
