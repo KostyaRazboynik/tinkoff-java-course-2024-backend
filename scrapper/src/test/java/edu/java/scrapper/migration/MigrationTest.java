@@ -1,10 +1,9 @@
 package edu.java.scrapper.migration;
 
+import edu.java.scrapper.IntegrationTest;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import edu.java.scrapper.IntegrationTest;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -12,12 +11,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class MigrationTest extends IntegrationTest {
     private static Statement statement;
-    private final String SQL_INSERT_GOOGLE =
+    private static final String SQL_INSERT_GOOGLE =
         "INSERT INTO link (link,type_id,checked_date) VALUES ('http://google.com', 1, now())";
 
-    private final String SQL_INSERT_YANDEX =
+    private static final String SQL_DELETE_GOOGLE =
+        "DELETE FROM link where link = 'http://google.com'";
+
+    private static final String SQL_INSERT_YANDEX =
         "INSERT INTO link (link,type_id,checked_date) VALUES ('https://ya.ru/', 1, now())";
 
+    private static final String SQL_DELETE_YANDEX =
+        "DELETE FROM link where link = 'https://ya.ru/'";
 
     @BeforeAll
     public static void setUp() throws Exception {
@@ -30,6 +34,8 @@ public class MigrationTest extends IntegrationTest {
 
     @AfterAll
     public static void tearDown() throws Exception {
+        statement.executeUpdate(SQL_DELETE_YANDEX);
+        statement.executeUpdate(SQL_DELETE_GOOGLE);
         statement.close();
     }
 

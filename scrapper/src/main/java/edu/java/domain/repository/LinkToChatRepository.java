@@ -11,6 +11,8 @@ public interface LinkToChatRepository {
 
     boolean delete(String link, Long chatId);
 
+    boolean delete(Long chatId);
+
     List<LinkToChat> findAll();
 
     List<Chat> findChatsByLink(String link);

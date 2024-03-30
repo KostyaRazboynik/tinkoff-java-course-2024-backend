@@ -12,24 +12,24 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class JdbcTgChatRepository implements TgChatRepository {
 
-    private final RowMapper<Chat> chatRowMapper;
     private final JdbcTemplate jdbcTemplate;
+    private static final RowMapper<Chat> CHAT_ROW_MAPPER = RowMappers.chatRowMapper;
 
     @Override
     public boolean add(Long chatId) {
-        String request = "INSERT INTO chat (chat_id) values (?) ON CONFLICT DO NOTHING";
+        String request = "insert into chat (chat_id) values (?) on conflict do nothing";
         return jdbcTemplate.update(request, chatId) != 0;
     }
 
     @Override
     public boolean delete(Long chatId) {
-        String request = "DELETE FROM chat WHERE chat_id = ?";
+        String request = "delete from chat where chat_id = ?";
         return jdbcTemplate.update(request, chatId) != 0;
     }
 
     @Override
     public List<Chat> findAll() {
-        String request = "SELECT chat_id FROM chat";
-        return jdbcTemplate.query(request, chatRowMapper);
+        String request = "select chat_id from chat";
+        return jdbcTemplate.query(request, CHAT_ROW_MAPPER);
     }
 }
