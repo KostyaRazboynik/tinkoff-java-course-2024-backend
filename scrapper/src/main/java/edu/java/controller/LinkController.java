@@ -29,7 +29,7 @@ public class LinkController {
     private final LinkService linkService;
 
     public ResponseEntity<ListLinksResponse> getLinks(@RequestHeader("Tg-Chat-Id") long chatId) {
-        var links = linkService.listAll(chatId).stream().map(link -> {
+        var links = linkService.findLinksByChat(chatId).stream().map(link -> {
             try {
                 return new LinkResponse(chatId, new URI(link.link));
             } catch (URISyntaxException e) {

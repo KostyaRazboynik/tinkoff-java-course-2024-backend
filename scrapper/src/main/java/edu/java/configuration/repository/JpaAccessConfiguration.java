@@ -1,4 +1,4 @@
-package edu.java.di.repository;
+package edu.java.configuration.repository;
 
 import edu.java.domain.repository.jpa.JpaLinkRepository;
 import edu.java.domain.repository.jpa.JpaTgChatRepository;
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConditionalOnProperty(prefix = "app", name = "database", havingValue = "jpa")
+@ConditionalOnProperty(prefix = "app", name = "databaseAccessType", havingValue = "jpa")
 public class JpaAccessConfiguration {
 
     @Bean

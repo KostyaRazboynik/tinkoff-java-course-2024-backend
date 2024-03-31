@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import lombok.Data;
 
@@ -36,5 +37,23 @@ public class ChatEntity {
 
     private Chat toModel() {
         return new Chat(chatId);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        } else if (this == o) {
+            return true;
+        } else if (o instanceof ChatEntity chat) {
+            return Objects.equals(this.chatId, chat.chatId);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(chatId);
     }
 }

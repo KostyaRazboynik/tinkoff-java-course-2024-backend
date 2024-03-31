@@ -11,6 +11,7 @@ public interface JpaLinkRepository extends JpaRepository<LinkEntity, Long> {
 
     LinkEntity getLinkEntityByLink(String link);
 
-    @Query(value = "select * from link where link.update_date < now() - interval '1 minutes'", nativeQuery = true)
+    @Query(value = "select * from link "
+        + "where link.checked_date < timezone('utc', now()) - interval '1 minute'", nativeQuery = true)
     List<LinkEntity> getLinksToUpdate();
 }

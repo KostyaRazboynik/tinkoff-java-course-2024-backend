@@ -13,7 +13,6 @@ public record ApplicationConfig(
     BaseUrls baseUrls,
     @NotNull
     Scheduler scheduler,
-
     @NotNull
     @DefaultValue("jdbc")
     AccessType databaseAccessType

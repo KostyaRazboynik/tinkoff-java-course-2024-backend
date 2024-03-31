@@ -7,7 +7,9 @@ import edu.java.service.LinkUpdaterService;
 import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @RequiredArgsConstructor
 public class JpaLinkUpdaterService implements LinkUpdaterService {
 
@@ -22,7 +24,7 @@ public class JpaLinkUpdaterService implements LinkUpdaterService {
     public boolean updateCheckDate(String link) {
         LinkEntity updatedLink = linkRepository.getLinkEntityByLink(link);
         if (updatedLink != null) {
-            updatedLink.setUpdateDate(OffsetDateTime.now());
+            updatedLink.setCheckedDate(OffsetDateTime.now());
             linkRepository.save(updatedLink);
             return true;
         } else {

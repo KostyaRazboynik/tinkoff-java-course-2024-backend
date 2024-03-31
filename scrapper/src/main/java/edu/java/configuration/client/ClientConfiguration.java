@@ -1,4 +1,4 @@
-package edu.java.di;
+package edu.java.configuration.client;
 
 import edu.java.configuration.ApplicationConfig;
 import org.springframework.context.annotation.Bean;
@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
-public class ClientProvider {
+public class ClientConfiguration {
     @Bean
     public WebClient githubWebClient(ApplicationConfig applicationConfig) {
         return WebClient.builder()

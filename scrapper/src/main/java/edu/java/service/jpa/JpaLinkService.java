@@ -6,9 +6,13 @@ import edu.java.domain.repository.jpa.JpaTgChatRepository;
 import edu.java.domain.repository.jpa.entity.ChatEntity;
 import edu.java.domain.repository.jpa.entity.LinkEntity;
 import edu.java.service.LinkService;
+import java.time.OffsetDateTime;
+import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @RequiredArgsConstructor
 public class JpaLinkService implements LinkService {
 
@@ -49,26 +53,11 @@ public class JpaLinkService implements LinkService {
     }
 
     @Override
-    public List<Link> listAll(long chatId) {
-        ChatEntity chat = chatRepository.findById(chatId).orElse(null);
-        if (chat == null) {
-            return List.of();
-        }
-        return LinkEntity.collectionEntityToListModel(chat.getLinks());
-    }
-
-    @Override
-    public List<Link> getLinksToUpdate() {
-        return LinkEntity.collectionEntityToListModel(linkRepository.getLinksToUpdate());
-    }
-
-    @Override
     public List<Link> findLinksByChat(long chatId) {
-        ChatEntity chat = chatRepository.findById(chatId).orElse(null);
-        if (chat == null) {
-            return List.of();
-        }
-        return LinkEntity.collectionEntityToListModel(chat.getLinks());
+        return chatRepository.findById(chatId)
+            .map(ChatEntity::getLinks)
+            .map(LinkEntity::collectionEntityToListModel)
+            .orElse(Collections.emptyList());
     }
 
     private LinkEntity getLinkEntity(String url) {
@@ -76,6 +65,7 @@ public class JpaLinkService implements LinkService {
         if (link == null) {
             link = new LinkEntity();
             link.setLink(url);
+            link.setCheckedDate(OffsetDateTime.now());
             linkRepository.save(link);
         }
         return link;

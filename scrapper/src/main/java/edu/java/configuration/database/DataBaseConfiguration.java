@@ -1,4 +1,4 @@
-package edu.java.di;
+package edu.java.configuration.database;
 
 import javax.sql.DataSource;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
-public class DataBaseProvider {
+public class DataBaseConfiguration {
 
     private static final String URL = "jdbc:postgresql://localhost:5432/scrapper";
     private static final String POSTGRES = "postgres";

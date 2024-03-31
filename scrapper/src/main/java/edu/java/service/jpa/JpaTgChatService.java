@@ -6,9 +6,13 @@ import edu.java.domain.repository.jpa.JpaTgChatRepository;
 import edu.java.domain.repository.jpa.entity.ChatEntity;
 import edu.java.domain.repository.jpa.entity.LinkEntity;
 import edu.java.service.TgChatService;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @RequiredArgsConstructor
 public class JpaTgChatService implements TgChatService {
 
@@ -33,10 +37,10 @@ public class JpaTgChatService implements TgChatService {
 
     @Override
     public List<Chat> findChatsByLink(String url) {
-        LinkEntity link = linkRepository.getLinkEntityByLink(url);
-        if (link == null) {
-            return List.of();
-        }
-        return ChatEntity.collectionEntityToListModel(link.getChats());
+        return Optional
+            .ofNullable(linkRepository.getLinkEntityByLink(url))
+            .map(LinkEntity::getChats)
+            .map(ChatEntity::collectionEntityToListModel)
+            .orElse(Collections.emptyList());
     }
 }
