@@ -14,38 +14,47 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class JdbcLinkToChatRepository implements LinkToChatRepository {
 
-    private final RowMapper<LinkToChat> linkChatRowMapper;
-    private final RowMapper<Chat> chatRowMapper;
-    private final RowMapper<Link> linkRowMapper;
     private final JdbcTemplate jdbcTemplate;
+    private static final RowMapper<LinkToChat> LINK_TO_CHAT_ROW_MAPPER = RowMappers.linkToChatRowMapper;
+    private static final RowMapper<Chat> CHAT_ROW_MAPPER = RowMappers.chatRowMapper;
+    private static final RowMapper<Link> LINK_ROW_MAPPER = RowMappers.linkRowMapper;
 
     @Override
     public boolean add(String link, Long chatId) {
-        String request = "INSERT INTO link_chat (chat_id, link) values (?, ?) ON CONFLICT DO NOTHING";
-        return jdbcTemplate.update(request, chatId, link) != 0;
+        String request = "insert into link_chat (link, chat_id) values (?, ?) on conflict do nothing";
+        return jdbcTemplate.update(request, link, chatId) != 0;
     }
 
     @Override
     public boolean delete(String link, Long chatId) {
-        String request = "DELETE FROM link_chat WHERE chat_id = ? AND link = ?";
-        return jdbcTemplate.update(request, chatId, link) != 0;
+        String request = "delete from link_chat where link = ? and chat_id = ?";
+        return jdbcTemplate.update(request, link, chatId) != 0;
+    }
+
+    @Override
+    public boolean delete(Long chatId) {
+        boolean result = true;
+        for (Link link: findLinksByChat(chatId)) {
+            result = result && delete(link.link, chatId);
+        }
+        return result;
     }
 
     @Override
     public List<LinkToChat> findAll() {
-        String request = "SELECT * FROM link_chat JOIN link USING (link)";
-        return jdbcTemplate.query(request, linkChatRowMapper);
+        String request = "select * from link_chat join link using (link)";
+        return jdbcTemplate.query(request, LINK_TO_CHAT_ROW_MAPPER);
     }
 
     @Override
     public List<Chat> findChatsByLink(String link) {
-        String request = "SELECT * FROM link_chat JOIN link USING (link) WHERE link = ?";
-        return jdbcTemplate.query(request, chatRowMapper, link);
+        String request = "select * from link_chat join link using (link) where link = ?";
+        return jdbcTemplate.query(request, CHAT_ROW_MAPPER, link);
     }
 
     @Override
     public List<Link> findLinksByChat(Long chatId) {
-        String request = "SELECT * FROM link_chat JOIN link USING (link) where chat_id = ?";
-        return jdbcTemplate.query(request, linkRowMapper, chatId);
+        String request = "select * from link_chat join link using (link) where chat_id = ?";
+        return jdbcTemplate.query(request, LINK_ROW_MAPPER, chatId);
     }
 }

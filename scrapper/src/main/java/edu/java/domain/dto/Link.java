@@ -11,5 +11,5 @@ import lombok.EqualsAndHashCode;
 public class Link {
     public String link;
     public int type;
-    public OffsetDateTime updateDate;
+    public OffsetDateTime checkDate;
 }

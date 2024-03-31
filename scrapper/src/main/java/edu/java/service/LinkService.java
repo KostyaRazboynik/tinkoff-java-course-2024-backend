@@ -11,7 +11,5 @@ public interface LinkService {
 
     List<Link> listAll(long chatId);
 
-    List<Link> getLinksToUpdate();
-
     List<Link> findLinksByChat(long chatId);
 }
