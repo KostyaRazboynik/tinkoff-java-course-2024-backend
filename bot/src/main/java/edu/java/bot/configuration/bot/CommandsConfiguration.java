@@ -1,4 +1,4 @@
-package edu.java.bot.di;
+package edu.java.bot.configuration.bot;
 
 import com.pengrad.telegrambot.model.BotCommand;
 import edu.java.bot.command.Command;
@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class CommandsProvider {
+public class CommandsConfiguration {
     @Bean
     public BotCommand[] botCommands(List<Command> commands) {
         return commands.stream()

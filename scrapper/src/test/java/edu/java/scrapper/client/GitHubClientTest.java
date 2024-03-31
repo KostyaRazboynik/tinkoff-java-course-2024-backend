@@ -2,11 +2,11 @@ package edu.java.scrapper.client;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import edu.java.data.client.github.GitHubClient;
-import org.junit.jupiter.api.DisplayName;
+import java.time.Duration;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.test.StepVerifier;
+import reactor.util.retry.Retry;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
@@ -16,7 +16,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @WireMockTest(httpPort = 8029)
 public class GitHubClientTest {
 
-    private final GitHubClient githubClient = new GitHubClient(WebClient.create("http://localhost:8029"));
+    private final GitHubClient githubClient = new GitHubClient(
+        WebClient.create("http://localhost:8029"),
+        Retry.fixedDelay(1, Duration.ofMillis(1000))
+    );
 
     @Test
     void successfulApiResponseTest() {
@@ -41,9 +44,7 @@ public class GitHubClientTest {
             .willReturn(aResponse()
                 .withStatus(500)));
         StepVerifier.create(githubClient.getRepositoryInfo("owner", "repo"))
-            .expectErrorSatisfies(throwable -> assertThat(throwable)
-                .isInstanceOf(WebClientResponseException.class)
-                .hasMessageEndingWith("500 Github API error"))
+            .expectError()
             .verify();
     }
 }

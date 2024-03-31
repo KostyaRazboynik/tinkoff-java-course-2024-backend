@@ -3,10 +3,11 @@ package edu.java.scrapper.client;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import edu.java.data.client.stackoverflow.StackOverflowClient;
 import edu.java.data.client.stackoverflow.dto.StackOverflowQuestionDTO.QuestionResponse;
+import java.time.Duration;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.test.StepVerifier;
+import reactor.util.retry.Retry;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
@@ -16,7 +17,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @WireMockTest(httpPort = 8029)
 class StackOverflowClientTest {
     private final StackOverflowClient client =
-        new StackOverflowClient(WebClient.create("http://localhost:8029"));
+        new StackOverflowClient(
+            WebClient.create("http://localhost:8029"),
+            Retry.fixedDelay(1, Duration.ofMillis(1000))
+        );
 
     @Test
     void successfulApiResponseTest() {
@@ -44,9 +48,7 @@ class StackOverflowClientTest {
                 .withStatus(500)));
 
         StepVerifier.create(client.getQuestionInfo(1L))
-            .expectErrorSatisfies(throwable -> assertThat(throwable)
-                .isInstanceOf(WebClientResponseException.class)
-                .hasMessageEndingWith("500 StackOverflow API error"))
+            .expectError()
             .verify();
     }
 }

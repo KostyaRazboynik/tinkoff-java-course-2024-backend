@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
 
 @Component
 @RequiredArgsConstructor
@@ -23,6 +24,8 @@ public class ScrapperClient {
     private static final String INVALID_LINK_EXCEPTION_MESSAGE = "Invalid link";
 
     private final WebClient scrapperClient;
+
+    private final Retry retry;
 
     public Mono<Void> register(long chatId) {
         return handleChatRequest(HttpMethod.POST, chatId);
@@ -41,7 +44,8 @@ public class ScrapperClient {
                 this::isApiError,
                 this::handleApiError
             )
-            .bodyToMono(ListLinksResponse.class);
+            .bodyToMono(ListLinksResponse.class)
+            .retryWhen(retry);
     }
 
     public Mono<LinkResponse> trackLink(long chatId, String url) {
@@ -72,7 +76,8 @@ public class ScrapperClient {
                 this::isApiError,
                 this::handleApiError
             )
-            .bodyToMono(Void.class);
+            .bodyToMono(Void.class)
+            .retryWhen(retry);
     }
 
     private Mono<LinkResponse> handleLinkRequest(long chatId, Object requestBody, HttpMethod method) {
@@ -85,7 +90,8 @@ public class ScrapperClient {
                 this::isApiError,
                 this::handleApiError
             )
-            .bodyToMono(LinkResponse.class);
+            .bodyToMono(LinkResponse.class)
+            .retryWhen(retry);
     }
 
     private Mono<RuntimeException> handleApiError(ClientResponse response) {

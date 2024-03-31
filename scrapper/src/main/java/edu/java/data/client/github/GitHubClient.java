@@ -7,11 +7,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
 
 @Component
 @RequiredArgsConstructor
 public class GitHubClient implements BaseClient {
+
     private final WebClient githubWebClient;
+    private final Retry retry;
 
     @Override
     public WebClient getWebClient() {
@@ -32,6 +35,7 @@ public class GitHubClient implements BaseClient {
                     null
                 ))
             )
-            .bodyToMono(GithubRepositoryDTO.class);
+            .bodyToMono(GithubRepositoryDTO.class)
+            .retryWhen(retry);
     }
 }
