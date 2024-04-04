@@ -28,19 +28,19 @@ public class JdbcLinkRepositoryTest {
     @Transactional
     @Rollback
     public void addLinkTest() {
-        linkRepository.add("test0", 0);
+        linkRepository.add("test", 1);
         List<Link> links = linkRepository.findAll();
         assertThat(links.size()).isEqualTo(1);
-        assertThat(links.getFirst().link).isEqualTo("test0");
-        assertThat(links.getFirst().type).isEqualTo(0);
+        assertThat(links.getFirst().link).isEqualTo("test");
+        assertThat(links.getFirst().type).isEqualTo(1);
     }
 
     @Test
     @Transactional
     @Rollback
     public void deleteLinkTest() {
-        linkRepository.add("test0", 0);
-        linkRepository.delete("test0");
+        linkRepository.add("test", 0);
+        linkRepository.delete("test");
         List<Link> links = linkRepository.findAll();
         assertThat(links.size()).isEqualTo(0);
     }

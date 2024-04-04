@@ -19,7 +19,6 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
     private final Bucket bucket;
     private final Map<String, Bucket> ipBuckets = new ConcurrentHashMap<>();
-    private final static HttpStatus STATUS = HttpStatus.TOO_MANY_REQUESTS;
 
     @Override
     protected void doFilterInternal(
@@ -34,8 +33,8 @@ public class RateLimitFilter extends OncePerRequestFilter {
         ) {
             filterChain.doFilter(request, response);
         } else {
-            response.setStatus(STATUS.value());
-            response.getWriter().append(STATUS.getReasonPhrase());
+            response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
+            response.getWriter().append(HttpStatus.TOO_MANY_REQUESTS.getReasonPhrase());
         }
     }
 }

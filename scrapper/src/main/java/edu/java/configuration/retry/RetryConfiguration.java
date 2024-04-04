@@ -33,14 +33,14 @@ public class RetryConfiguration {
         return Retry.fixedDelay(
             applicationConfig.retry().attempts(),
             Duration.ofMillis(applicationConfig.retry().delay())
-        ).filter(getFilter(applicationConfig.retry().statuses()));
+        ).filter(retryableErrorsFilter(applicationConfig.retry().statuses()));
     }
 
     private Retry exponentialRetry() {
         return Retry.backoff(
             applicationConfig.retry().attempts(),
             Duration.ofMillis(applicationConfig.retry().delay())
-        ).filter(getFilter(applicationConfig.retry().statuses()));
+        ).filter(retryableErrorsFilter(applicationConfig.retry().statuses()));
     }
 
     private Retry linearRetry() {
@@ -55,7 +55,7 @@ public class RetryConfiguration {
                             return Mono.error(
                                 new IllegalStateException("RetrySignal must not be null")
                             );
-                        } else if (!getFilter(applicationConfig.retry().statuses()).test(currentFailure)) {
+                        } else if (!retryableErrorsFilter(applicationConfig.retry().statuses()).test(currentFailure)) {
                             return Mono.error(currentFailure);
                         } else if (iteration >= applicationConfig.retry().attempts()) {
                             return Mono.error(new ExhaustedRetryException("retry failed on iteration " + iteration));
@@ -69,10 +69,10 @@ public class RetryConfiguration {
         );
     }
 
-    private Predicate<Throwable> getFilter(List<Integer> codes) {
+    private Predicate<Throwable> retryableErrorsFilter(List<Integer> codes) {
         return exception -> {
-            if (exception instanceof HttpClientErrorException) {
-                return codes.contains(((HttpClientErrorException) exception).getStatusCode().value());
+            if (exception instanceof HttpClientErrorException httpClientErrorException) {
+                return codes.contains(httpClientErrorException.getStatusCode().value());
             } else {
                 return false;
             }
