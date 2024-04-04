@@ -3,6 +3,7 @@ package edu.java.bot.controller;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.controller.dto.request.LinkUpdateRequest;
+import edu.java.bot.service.SendUpdateService;
 import java.net.URI;
 import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +24,7 @@ public class BotControllerBaseTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        botController = new BotControllerImpl(telegramBot);
+        botController = new BotControllerImpl(new SendUpdateService(telegramBot));
     }
 
     @Test

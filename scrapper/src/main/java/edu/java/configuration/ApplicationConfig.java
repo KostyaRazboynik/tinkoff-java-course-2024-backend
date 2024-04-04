@@ -19,7 +19,11 @@ public record ApplicationConfig(
     @DefaultValue("jdbc")
     AccessType databaseAccessType,
     @NotNull
-    Retry retry
+    Retry retry,
+    @NotNull
+    boolean useQueue,
+    @NotNull
+    Kafka kafka
 ) {
     public record BaseUrls(
         @NotEmpty
@@ -47,6 +51,14 @@ public record ApplicationConfig(
         int attempts,
         @NotNull
         long delay
+    ) {
+    }
+
+    public record Kafka(
+        @NotNull
+        String bootstrapServers,
+        @NotNull
+        String topicName
     ) {
     }
 }

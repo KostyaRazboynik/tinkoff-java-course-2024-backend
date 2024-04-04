@@ -10,9 +10,12 @@ app:
   database-access-type: jdbc
   retry:
     retryType: EXPONENTIAL
-    statuses: [ 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 520 ]
+    statuses: [500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 520]
     attempts: 3
     delay: 2000
+  kafka:
+    bootstrap-servers: localhost:9092
+    topicName: "botUpdates"
 
 spring:
   application:

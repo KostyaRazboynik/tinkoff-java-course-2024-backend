@@ -1,12 +1,12 @@
 package edu.java.service.scheduler.source;
 
-import edu.java.data.client.bot.BotClient;
 import edu.java.data.client.bot.dto.request.LinkUpdateRequest;
 import edu.java.data.client.stackoverflow.StackOverflowClient;
 import edu.java.data.client.stackoverflow.dto.StackOverflowQuestionDTO;
 import edu.java.domain.dto.Chat;
 import edu.java.domain.dto.Link;
 import edu.java.service.LinkUpdaterService;
+import edu.java.service.SendUpdateService;
 import edu.java.service.TgChatService;
 import edu.java.utils.LinkValidator;
 import java.net.URI;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @SuppressWarnings("MagicNumber")
 public class StackOverflowLinkUpdater implements SourceLinkUpdaterService {
-    private final BotClient botClient;
+    private final SendUpdateService sendUpdateService;
     private final StackOverflowClient stackOverflowClient;
     private final LinkUpdaterService linkUpdaterService;
     private final TgChatService chatService;
@@ -47,7 +47,7 @@ public class StackOverflowLinkUpdater implements SourceLinkUpdaterService {
                         "stackOverflow link updating",
                         chatService.findChatsByLink(link).stream().map(Chat::getChatId).collect(Collectors.toList())
                     );
-                    botClient.update(request).subscribe();
+                    sendUpdateService.processUpdate(request);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
