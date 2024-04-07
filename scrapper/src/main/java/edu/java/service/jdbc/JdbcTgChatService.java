@@ -17,7 +17,6 @@ public class JdbcTgChatService implements TgChatService {
     private final LinkToChatRepository mapperRepository;
 
     @Override
-    @Transactional
     public void register(long chatId) {
         repository.add(chatId);
     }

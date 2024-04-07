@@ -27,22 +27,22 @@ public class GitHubLinkUpdater implements SourceLinkUpdaterService {
     @Override
     public int update(Link link) {
         String url = link.link;
-       if (LinkValidator.isGitHubLink(url)) {
-           String[] parts = url.split("/");
-           String owner = parts[parts.length - 2];
-           String repositoryName = parts[parts.length - 1];
+        if (LinkValidator.isGitHubLink(url)) {
+            String[] parts = url.split("/");
+            String owner = parts[parts.length - 2];
+            String repositoryName = parts[parts.length - 1];
 
-           gitHubClient.getRepositoryInfo(owner, repositoryName).subscribe(
-               githubRepositoryDTOConsumer(link.link)
-           );
-           return 1;
-       }
+            gitHubClient.getRepositoryInfo(owner, repositoryName).subscribe(
+                githubRepositoryDTOConsumer(link.link)
+            );
+            return 1;
+        }
         return 0;
     }
 
     private Consumer<GithubRepositoryDTO> githubRepositoryDTOConsumer(String link) {
         return (info) -> {
-            if (linkUpdaterService.updateCheckDate(link)) {
+            if (linkUpdaterService.updateUpdateDate(link, info.updatedAt)) {
                 try {
                     var request = new LinkUpdateRequest(
                         0L,

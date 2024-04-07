@@ -12,4 +12,5 @@ public class Link {
     public String link;
     public int type;
     public OffsetDateTime checkDate;
+    public OffsetDateTime updateDate;
 }

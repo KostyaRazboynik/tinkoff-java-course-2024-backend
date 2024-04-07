@@ -23,7 +23,6 @@ public class JdbcLinkService implements LinkService {
     }
 
     @Override
-    @Transactional
     public boolean delete(long chatId, String url) {
         return mapperRepository.delete(url, chatId);
     }

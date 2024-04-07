@@ -13,7 +13,8 @@ import org.springframework.stereotype.Repository;
 public class JdbcTgChatRepository implements TgChatRepository {
 
     private final JdbcTemplate jdbcTemplate;
-    private static final RowMapper<Chat> CHAT_ROW_MAPPER = RowMappers.chatRowMapper;
+    private static final RowMapper<Chat> CHAT_ROW_MAPPER =
+        (resultSet, rowNum) -> new Chat(resultSet.getLong("chat_id"));
 
     @Override
     public boolean add(Long chatId) {
