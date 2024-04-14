@@ -3,11 +3,13 @@ package edu.java.bot.scrapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import edu.java.bot.client.ScrapperClient;
+import java.time.Duration;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.test.StepVerifier;
+import reactor.util.retry.Retry;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,7 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @WireMockTest(httpPort = 8029)
 class ScrapperClientBaseTest {
-    private final ScrapperClient scrapperClient = new ScrapperClient(WebClient.create("http://localhost:8029"));
+    private final ScrapperClient scrapperClient = new ScrapperClient(
+        WebClient.create("http://localhost:8029"),
+        Retry.fixedDelay(1, Duration.ofMillis(1000))
+    );
 
     @Test
     void registerSuccessfulTest() {

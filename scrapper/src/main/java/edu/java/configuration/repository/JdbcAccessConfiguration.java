@@ -33,10 +33,10 @@ public class JdbcAccessConfiguration {
     }
 
     @Bean
-    public TgChatService chatService(
-        JdbcTgChatRepository chatRepository,
+    public TgChatService tgChatService(
+        JdbcTgChatRepository tgChatRepository,
         JdbcLinkToChatRepository mapperRepository
     ) {
-        return new JdbcTgChatService(chatRepository, mapperRepository);
+        return new JdbcTgChatService(tgChatRepository, mapperRepository);
     }
 }
