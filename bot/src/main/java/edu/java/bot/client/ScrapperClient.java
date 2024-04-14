@@ -20,6 +20,7 @@ public class ScrapperClient {
     private static final String TG_CHAT_ID_HEADER = "Tg-Chat-Id";
     private static final String CHAT_ENDPOINT = "/tg-chat/{id}";
     private static final String LINKS_URI = "/links";
+    private static final String INVALID_LINK_EXCEPTION_MESSAGE = "Invalid link";
 
     private final WebClient scrapperClient;
 
@@ -43,7 +44,7 @@ public class ScrapperClient {
             .bodyToMono(ListLinksResponse.class);
     }
 
-    public Mono<LinkResponse> addLink(long chatId, String url) {
+    public Mono<LinkResponse> trackLink(long chatId, String url) {
         return handleLinkRequest(
             chatId,
             new AddLinkRequest(URI.create(url)),
@@ -51,12 +52,16 @@ public class ScrapperClient {
         );
     }
 
-    public Mono<LinkResponse> removeLink(long chatId, String url) {
-        return handleLinkRequest(
-            chatId,
-            new RemoveLinkRequest(URI.create(url)),
-            HttpMethod.DELETE
-        );
+    public Mono<LinkResponse> untrackLink(long chatId, String url) {
+        try {
+            return handleLinkRequest(
+                chatId,
+                new RemoveLinkRequest(URI.create(url)),
+                HttpMethod.DELETE
+            );
+        } catch (IllegalArgumentException exception) {
+            return Mono.error(new RuntimeException(INVALID_LINK_EXCEPTION_MESSAGE));
+        }
     }
 
     private Mono<Void> handleChatRequest(HttpMethod method, long chatId) {

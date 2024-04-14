@@ -9,6 +9,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 public class ListLinksResponse {
-    public List<LinkResponse> links;
     public int size;
+    public List<LinkResponse> links;
 }

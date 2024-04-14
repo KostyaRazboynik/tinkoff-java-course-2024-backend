@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class ExceptionApiHandler {
+
     private static final String API_ERROR_RESPONSE_DESCRIPTION = "Internal Server Error";
 
     @ExceptionHandler(RuntimeException.class)

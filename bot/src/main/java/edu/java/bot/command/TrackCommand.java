@@ -1,10 +1,18 @@
 package edu.java.bot.command;
 
-import java.util.List;
+import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.client.ScrapperClient;
+import edu.java.bot.utils.LinkValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 @Component
+@RequiredArgsConstructor
 public class TrackCommand implements Command {
+
+    private final ScrapperClient scrapperClient;
+
     @Override
     public String command() {
         return "/track";
@@ -16,10 +24,16 @@ public class TrackCommand implements Command {
     }
 
     @Override
-    public String execute(List<String> arguments) {
-        if (arguments.size() != 1) {
-            return "use the command followed by the link";
+    public SendMessage execute(Long chatId, String text) {
+        String[] splitText = text.split(" ");
+        if (splitText.length != 2) {
+            return new SendMessage(chatId, "use the command followed by the link");
+        } else if (!LinkValidator.isValidLink(splitText[1])) {
+            new SendMessage(chatId, "not supported or invalid link");
         }
-        return "not implemented yet";
+        return scrapperClient.trackLink(chatId, splitText[1])
+            .map(response -> new SendMessage(chatId, "started tracking " + response.url))
+            .onErrorResume(error -> Mono.just(new SendMessage(chatId, error.getMessage())))
+            .block();
     }
 }

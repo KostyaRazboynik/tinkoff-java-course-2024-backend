@@ -1,14 +1,14 @@
 package edu.java.bot.command;
 
 import com.pengrad.telegrambot.model.BotCommand;
-import java.util.List;
+import com.pengrad.telegrambot.request.SendMessage;
 
 public interface Command {
     String command();
 
     String description();
 
-    String execute(List<String> arguments);
+    SendMessage execute(Long chatId, String text);
 
     default boolean isCommand(String command) {
         return command().equals(command);
