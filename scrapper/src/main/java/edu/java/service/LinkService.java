@@ -9,7 +9,5 @@ public interface LinkService {
 
     boolean delete(long chatId, String url);
 
-    List<Link> listAll(long chatId);
-
     List<Link> findLinksByChat(long chatId);
 }

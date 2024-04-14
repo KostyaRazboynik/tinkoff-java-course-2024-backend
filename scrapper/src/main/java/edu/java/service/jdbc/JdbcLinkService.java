@@ -6,10 +6,9 @@ import edu.java.domain.repository.LinkToChatRepository;
 import edu.java.service.LinkService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+@Transactional
 @RequiredArgsConstructor
 public class JdbcLinkService implements LinkService {
 
@@ -17,7 +16,6 @@ public class JdbcLinkService implements LinkService {
     private final LinkToChatRepository mapperRepository;
 
     @Override
-    @Transactional
     public boolean add(long chatId, String url, int type) {
         return linkRepository.add(url, type) && mapperRepository.add(url, chatId);
     }
@@ -25,11 +23,6 @@ public class JdbcLinkService implements LinkService {
     @Override
     public boolean delete(long chatId, String url) {
         return mapperRepository.delete(url, chatId);
-    }
-
-    @Override
-    public List<Link> listAll(long tgChatId) {
-        return linkRepository.findAll();
     }
 
     @Override

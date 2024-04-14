@@ -1,6 +1,6 @@
 package edu.java.scrapper.repository.jdbc;
 
-import edu.java.configuration.DataBaseConfiguration;
+import edu.java.configuration.database.DataBaseConfiguration;
 import edu.java.domain.dto.Chat;
 import edu.java.domain.dto.Link;
 import edu.java.domain.repository.jdbc.JdbcLinkRepository;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = {
-    IntegrationTest.ManagerConfig.class,
+    IntegrationTest.ManagerTestConfiguration.class,
     DataBaseConfiguration.class,
     JdbcLinkRepository.class,
     JdbcTgChatRepository.class,
