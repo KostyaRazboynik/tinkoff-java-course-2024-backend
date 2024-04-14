@@ -1,6 +1,6 @@
 package edu.java.scrapper.repository.jdbc;
 
-import edu.java.configuration.DataBaseConfiguration;
+import edu.java.configuration.database.DataBaseConfiguration;
 import edu.java.domain.dto.Link;
 import edu.java.domain.repository.jdbc.JdbcLinkRepository;
 import edu.java.scrapper.IntegrationTest;
@@ -15,7 +15,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = {
-    IntegrationTest.ManagerConfig.class,
+    IntegrationTest.ManagerTestConfiguration.class,
     DataBaseConfiguration.class,
     JdbcLinkRepository.class
 })

@@ -6,10 +6,9 @@ import edu.java.domain.repository.TgChatRepository;
 import edu.java.service.TgChatService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+@Transactional
 @RequiredArgsConstructor
 public class JdbcTgChatService implements TgChatService {
 
@@ -22,7 +21,6 @@ public class JdbcTgChatService implements TgChatService {
     }
 
     @Override
-    @Transactional
     public void unregister(long chatId) {
         repository.delete(chatId);
         mapperRepository.delete(chatId);
