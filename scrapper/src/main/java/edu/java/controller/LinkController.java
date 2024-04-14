@@ -14,6 +14,9 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,11 +26,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @SuppressWarnings("MagicNumber")
-@RequestMapping("/link")
+@RequestMapping("/links")
 public class LinkController {
 
     private final LinkService linkService;
 
+    @GetMapping
     public ResponseEntity<ListLinksResponse> getLinks(@RequestHeader("Tg-Chat-Id") long chatId) {
         var links = linkService.findLinksByChat(chatId).stream().map(link -> {
             try {
@@ -40,6 +44,7 @@ public class LinkController {
         return ResponseEntity.ok(new ListLinksResponse(links.size(), links));
     }
 
+    @PostMapping
     public ResponseEntity<LinkResponse> trackLink(
         @RequestHeader("Tg-Chat-Id") long chatId,
         @RequestBody AddLinkRequest request
@@ -52,6 +57,7 @@ public class LinkController {
         return ResponseEntity.ok(new LinkResponse(chatId, request.link));
     }
 
+    @DeleteMapping
     public ResponseEntity<LinkResponse> untrackLink(
         @RequestHeader("Tg-Chat-Id") long chatId,
         @RequestBody RemoveLinkRequest request

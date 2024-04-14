@@ -12,13 +12,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class MigrationTest extends IntegrationTest {
     private static Statement statement;
     private static final String SQL_INSERT_GOOGLE =
-        "INSERT INTO link (link,type_id,checked_date) VALUES ('http://google.com', 1, now())";
+        "INSERT INTO link (link,type_id,checked_date, update_date) VALUES ('http://google.com', 1, now(), now())";
 
     private static final String SQL_DELETE_GOOGLE =
         "DELETE FROM link where link = 'http://google.com'";
 
     private static final String SQL_INSERT_YANDEX =
-        "INSERT INTO link (link,type_id,checked_date) VALUES ('https://ya.ru/', 1, now())";
+        "INSERT INTO link (link,type_id,checked_date, update_date) VALUES ('https://ya.ru/', 1, now(), now())";
 
     private static final String SQL_DELETE_YANDEX =
         "DELETE FROM link where link = 'https://ya.ru/'";

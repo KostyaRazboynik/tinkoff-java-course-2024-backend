@@ -1,6 +1,7 @@
 package edu.java.domain.repository;
 
 import edu.java.domain.dto.Link;
+import java.sql.Timestamp;
 import java.util.List;
 
 public interface LinkRepository {
@@ -14,4 +15,6 @@ public interface LinkRepository {
     List<Link> getLinksToUpdate();
 
     boolean updateCheckDate(String link);
+
+    boolean updateUpdateDate(String link, Timestamp time);
 }
