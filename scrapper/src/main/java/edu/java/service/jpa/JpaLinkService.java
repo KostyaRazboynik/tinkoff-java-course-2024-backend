@@ -66,6 +66,7 @@ public class JpaLinkService implements LinkService {
             link = new LinkEntity();
             link.setLink(url);
             link.setCheckedDate(OffsetDateTime.now());
+            link.setUpdateDate(OffsetDateTime.now());
             linkRepository.save(link);
         }
         return link;

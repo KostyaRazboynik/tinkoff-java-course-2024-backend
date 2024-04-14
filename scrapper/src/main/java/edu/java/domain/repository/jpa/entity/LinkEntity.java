@@ -26,6 +26,8 @@ public class LinkEntity {
     int type;
     @Column(name = "checked_date")
     OffsetDateTime checkedDate;
+    @Column(name = "update_date")
+    OffsetDateTime updateDate;
 
     @ManyToMany(mappedBy = "links", fetch = FetchType.EAGER)
     private Set<ChatEntity> chats = new HashSet<>();
@@ -37,7 +39,7 @@ public class LinkEntity {
     }
 
     private Link toModel() {
-        return new Link(link, type, checkedDate);
+        return new Link(link, type, checkedDate, updateDate);
     }
 
     @Override
@@ -47,7 +49,8 @@ public class LinkEntity {
         } else if (this == o) {
             return true;
         } else if (o instanceof LinkEntity link) {
-            return this.link.equals(link.link) && checkedDate.equals(link.checkedDate);
+            return this.link.equals(link.link) && checkedDate.equals(link.checkedDate)
+                && updateDate.equals(link.updateDate);
         } else {
             return false;
         }

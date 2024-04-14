@@ -22,9 +22,21 @@ public class JpaLinkUpdaterService implements LinkUpdaterService {
 
     @Override
     public boolean updateCheckDate(String link) {
+        LinkEntity checkedLink = linkRepository.getLinkEntityByLink(link);
+        if (checkedLink != null) {
+            checkedLink.setCheckedDate(OffsetDateTime.now());
+            linkRepository.save(checkedLink);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateUpdateDate(String link, OffsetDateTime time) {
         LinkEntity updatedLink = linkRepository.getLinkEntityByLink(link);
         if (updatedLink != null) {
-            updatedLink.setCheckedDate(OffsetDateTime.now());
+            updatedLink.setUpdateDate(time);
             linkRepository.save(updatedLink);
             return true;
         } else {

@@ -17,12 +17,11 @@ public class LinkUpdaterScheduler {
     private final SchedulerServiceImpl linkUpdater;
 
     @Scheduled(fixedDelayString = "#{@'app-edu.java.configuration.ApplicationConfig'.scheduler.interval}")
-    public int update() {
+    public void update() {
         try {
-            return linkUpdater.update();
+            linkUpdater.update();
         } catch (Exception e) {
             log.debug("Exception while updating link: " + e);
-            return -1;
         }
     }
 }

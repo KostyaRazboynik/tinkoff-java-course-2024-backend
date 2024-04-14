@@ -41,7 +41,7 @@ public class GitHubLinkUpdater implements SourceLinkUpdaterService {
 
     private Consumer<GithubRepositoryDTO> githubRepositoryDTOConsumer(String link) {
         return (info) -> {
-            if (linkUpdaterService.updateCheckDate(link)) {
+            if (linkUpdaterService.updateUpdateDate(link, info.updatedAt)) {
                 try {
                     var request = new LinkUpdateRequest(
                         0L,

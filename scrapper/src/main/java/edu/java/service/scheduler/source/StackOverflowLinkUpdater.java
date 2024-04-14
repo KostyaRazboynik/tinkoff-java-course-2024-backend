@@ -39,7 +39,7 @@ public class StackOverflowLinkUpdater implements SourceLinkUpdaterService {
 
     private Consumer<StackOverflowQuestionDTO> stackOverflowQuestionDTOConsumer(String link) {
         return (info) -> {
-            if (linkUpdaterService.updateCheckDate(link)) {
+            if (linkUpdaterService.updateUpdateDate(link, info.questions.getFirst().updatedAt)) {
                 try {
                     var request = new LinkUpdateRequest(
                         0L,

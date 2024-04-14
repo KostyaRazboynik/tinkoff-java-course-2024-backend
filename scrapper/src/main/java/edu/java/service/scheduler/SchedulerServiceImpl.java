@@ -1,6 +1,6 @@
 package edu.java.service.scheduler;
 
-import edu.java.domain.repository.LinkRepository;
+import edu.java.service.LinkUpdaterService;
 import edu.java.service.scheduler.source.GitHubLinkUpdater;
 import edu.java.service.scheduler.source.StackOverflowLinkUpdater;
 import edu.java.utils.LinkValidator;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SchedulerServiceImpl implements SchedulerService {
 
-    private final LinkRepository linkRepository;
+    private final LinkUpdaterService linkUpdaterService;
     private final GitHubLinkUpdater gitHubLinkUpdater;
     private final StackOverflowLinkUpdater stackOverflowLinkUpdater;
 
@@ -20,12 +20,13 @@ public class SchedulerServiceImpl implements SchedulerService {
     public int update() {
         AtomicInteger countUpdatedLinks = new AtomicInteger();
 
-        linkRepository.getLinksToUpdate().forEach(link -> {
+        linkUpdaterService.getLinksToUpdate().forEach(link -> {
             if (LinkValidator.isGitHubLink(link.link)) {
                 countUpdatedLinks.addAndGet(gitHubLinkUpdater.update(link));
             } else if (LinkValidator.isStackOverflowLink(link.link)) {
                 countUpdatedLinks.addAndGet(stackOverflowLinkUpdater.update(link));
             }
+            linkUpdaterService.updateCheckDate(link.link);
         });
 
         return countUpdatedLinks.get();
