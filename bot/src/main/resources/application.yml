@@ -25,3 +25,27 @@ server:
 
 logging:
   config: classpath:log4j2-plain.xml
+
+management:
+  server:
+    port: 8091
+  endpoints:
+    web:
+      base-path: /
+      path-mapping:
+        prometheus: "metrics"
+      exposure:
+        include: info, health, prometheus
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
