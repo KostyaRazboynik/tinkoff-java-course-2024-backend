@@ -27,23 +27,29 @@ public class KafkaConfiguration {
     private final ApplicationConfig applicationConfig;
 
     @Bean
-    public KafkaTemplate<String, LinkUpdateRequest> kafkaTemplate() {
-        return new KafkaTemplate<>(producerFactory());
+    public KafkaTemplate<String, LinkUpdateRequest> kafkaTemplate(
+        ProducerFactory<String, LinkUpdateRequest> producerFactory
+    ) {
+        return new KafkaTemplate<>(producerFactory);
     }
 
     @Bean
-    ConcurrentKafkaListenerContainerFactory<String, LinkUpdateRequest> kafkaListenerContainerFactory() {
+    ConcurrentKafkaListenerContainerFactory<String, LinkUpdateRequest> kafkaListenerContainerFactory(
+        ConsumerFactory<String, LinkUpdateRequest> consumerFactory
+    ) {
         ConcurrentKafkaListenerContainerFactory<String, LinkUpdateRequest> factory =
             new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory());
+        factory.setConsumerFactory(consumerFactory);
         return factory;
     }
 
-    private ProducerFactory<String, LinkUpdateRequest> producerFactory() {
+    @Bean
+    public ProducerFactory<String, LinkUpdateRequest> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
-    private ConsumerFactory<String, LinkUpdateRequest> consumerFactory() {
+    @Bean
+    public ConsumerFactory<String, LinkUpdateRequest> consumerFactory() {
         JsonDeserializer<LinkUpdateRequest> jsonDeserializer = new JsonDeserializer<>(LinkUpdateRequest.class);
         jsonDeserializer.setRemoveTypeHeaders(true);
         return new DefaultKafkaConsumerFactory<>(

@@ -22,11 +22,14 @@ public class KafkaConfiguration {
     private final ApplicationConfig applicationConfig;
 
     @Bean
-    public KafkaTemplate<String, LinkUpdateRequest> kafkaTemplate() {
-        return new KafkaTemplate<>(producerFactory());
+    public KafkaTemplate<String, LinkUpdateRequest> kafkaTemplate(
+        ProducerFactory<String, LinkUpdateRequest> producerFactory
+    ) {
+        return new KafkaTemplate<>(producerFactory);
     }
 
-    private ProducerFactory<String, LinkUpdateRequest> producerFactory() {
+    @Bean
+    public ProducerFactory<String, LinkUpdateRequest> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 

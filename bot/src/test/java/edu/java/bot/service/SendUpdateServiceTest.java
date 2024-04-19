@@ -2,6 +2,7 @@ package edu.java.bot.service;
 
 import edu.java.bot.configuration.ApplicationConfig;
 import edu.java.bot.controller.dto.request.LinkUpdateRequest;
+import edu.java.bot.service.kafka.DLQProducer;
 import edu.java.bot.service.kafka.KafkaConsumerService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -18,7 +19,8 @@ public class SendUpdateServiceTest {
 
     @Test
     public void processUpdateTest() {
-        KafkaConsumerService kafkaConsumerService = new KafkaConsumerService(applicationConfig, sendUpdateService, kafkaTemplate);
+        KafkaConsumerService kafkaConsumerService =
+            new KafkaConsumerService(sendUpdateService, new DLQProducer(kafkaTemplate, applicationConfig));
         LinkUpdateRequest linkUpdateRequest = new LinkUpdateRequest();
         kafkaConsumerService.listen(linkUpdateRequest);
         verify(sendUpdateService).processUpdate(linkUpdateRequest);

@@ -8,6 +8,7 @@ app:
     interval: 10s
     force-check-delay: 10s
   database-access-type: jdbc
+  useQueue: false
   retry:
     retryType: EXPONENTIAL
     statuses: [500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 520]
