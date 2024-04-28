@@ -1,12 +1,12 @@
 package edu.java.service.scheduler.source;
 
-import edu.java.data.client.bot.BotClient;
 import edu.java.data.client.bot.dto.request.LinkUpdateRequest;
 import edu.java.data.client.github.GitHubClient;
 import edu.java.data.client.github.dto.GithubRepositoryDTO;
 import edu.java.domain.dto.Chat;
 import edu.java.domain.dto.Link;
 import edu.java.service.LinkUpdaterService;
+import edu.java.service.SendUpdateService;
 import edu.java.service.TgChatService;
 import edu.java.utils.LinkValidator;
 import java.net.URI;
@@ -18,8 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class GitHubLinkUpdater implements SourceLinkUpdaterService {
-
-    private final BotClient botClient;
+    private final SendUpdateService sendUpdateService;
     private final GitHubClient gitHubClient;
     private final LinkUpdaterService linkUpdaterService;
     private final TgChatService chatService;
@@ -50,7 +49,7 @@ public class GitHubLinkUpdater implements SourceLinkUpdaterService {
                         "github link updating",
                         chatService.findChatsByLink(link).stream().map(Chat::getChatId).collect(Collectors.toList())
                     );
-                    botClient.update(request).subscribe();
+                    sendUpdateService.processUpdate(request);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }

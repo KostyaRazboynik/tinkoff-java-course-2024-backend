@@ -15,7 +15,9 @@ public record ApplicationConfig(
     String telegramToken,
     BaseUrls baseUrls,
     @NotNull
-    Retry retry
+    Retry retry,
+    @NotNull
+    Kafka kafka
 ) {
     public record BaseUrls(
         @NotEmpty
@@ -35,5 +37,22 @@ public record ApplicationConfig(
         @NotNull
         long delay
     ) {
+    }
+
+    public record Kafka(
+        @NotNull
+        String bootstrapServers,
+        @NotNull
+        String topicName,
+        @NotNull
+        Consumer consumer,
+        @NotNull
+        String errorTopicName
+    ) {
+        public record Consumer(
+            @NotNull
+            String groupId
+        ) {
+        }
     }
 }
