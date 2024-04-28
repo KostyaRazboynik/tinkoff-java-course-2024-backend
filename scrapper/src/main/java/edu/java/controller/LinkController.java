@@ -7,6 +7,7 @@ import edu.java.controller.dto.response.ListLinksResponse;
 import edu.java.service.LinkService;
 import edu.java.utils.LinkType;
 import edu.java.utils.LinkValidator;
+import io.micrometer.core.instrument.Counter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Objects;
@@ -30,9 +31,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class LinkController {
 
     private final LinkService linkService;
+    private final Counter counter;
 
     @GetMapping
     public ResponseEntity<ListLinksResponse> getLinks(@RequestHeader("Tg-Chat-Id") long chatId) {
+        counter.increment();
         var links = linkService.findLinksByChat(chatId).stream().map(link -> {
             try {
                 return new LinkResponse(chatId, new URI(link.link));
@@ -49,6 +52,7 @@ public class LinkController {
         @RequestHeader("Tg-Chat-Id") long chatId,
         @RequestBody AddLinkRequest request
     ) {
+        counter.increment();
         LinkType type = LinkValidator.getLinkType(request.link.toString());
         if (type == LinkType.UNKNOWN_LINK) {
             throw new RuntimeException("not supported link");
@@ -62,6 +66,7 @@ public class LinkController {
         @RequestHeader("Tg-Chat-Id") long chatId,
         @RequestBody RemoveLinkRequest request
     ) {
+        counter.increment();
         linkService.delete(chatId, request.link.toString());
         return ResponseEntity.ok(new LinkResponse(chatId, request.link));
     }
